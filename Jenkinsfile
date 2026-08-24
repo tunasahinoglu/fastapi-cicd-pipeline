@@ -107,6 +107,12 @@ pipeline {
     post {
         success {
             echo "CI pipeline completed: ${ECR_REPO}:${env.IMAGE_TAG}"
+            build job: 'fastapi-cicd-infra',
+                  wait: false,
+                  parameters: [
+                      string(name: 'ACTION', value: 'apply'),
+                      string(name: 'IMAGE_TAG', value: env.IMAGE_TAG)
+                  ]
         }
         failure {
             echo "Pipeline failed, please check the console logs."
@@ -116,3 +122,4 @@ pipeline {
         }
     }
 }
+

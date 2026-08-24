@@ -58,13 +58,9 @@ pipeline {
         }
 
         stage('Manual Approval') {
+            when { expression { params.ACTION == 'destroy' } }
             steps {
-                script {
-                    def message = (params.ACTION == 'apply')
-                        ? "This will create the EKS cluster (hourly costs will start). Continue?"
-                        : "EKS cluster and VPC will be PERMANENTLY DELETED. Continue?"
-                    input message: message, ok: 'Confirm'
-                }
+                input message: "EKS cluster and VPC will be PERMANENTLY DELETED. Continue?", ok: 'Confirm'
             }
         }
 
@@ -93,7 +89,7 @@ pipeline {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
                     sh """
-                        helm upgrade --install fastapi-app helm/fastapi-app \
+                        helm upgrade --install --atomic fastapi-app helm/fastapi-app \
                           --set image.repository=${ECR_REGISTRY}/${ECR_REPO} \
                           --set image.tag=${params.IMAGE_TAG} \
                           --wait --timeout 5m
