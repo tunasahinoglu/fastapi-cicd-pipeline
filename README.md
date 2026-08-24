@@ -74,7 +74,7 @@ Interactive API docs are at `http://localhost:8000/docs`.
 |--------|----------------|--------------------|
 | GET    | `/health`      | Health check       |
 | POST   | `/tasks`       | Create a task      |
-| GET    | `/tasks`       | List all tasks     |
+| GET    | `/tasks`       | List all tasks (filter with `?is_done=true/false`) |
 | GET    | `/tasks/{id}`  | Get a single task  |
 | PUT    | `/tasks/{id}`  | Update a task      |
 | DELETE | `/tasks/{id}`  | Delete a task      |
