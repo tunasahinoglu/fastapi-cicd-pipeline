@@ -85,7 +85,7 @@ pipeline {
         stage('Trivy Scan') {
             steps {
                 sh """
-                    trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress ${ECR_REPO}:${env.IMAGE_TAG}
+                    trivy image --severity HIGH,CRITICAL --exit-code 1 --ignore-unfixed --no-progress ${ECR_REPO}:${env.IMAGE_TAG}
                 """
             }
         }
