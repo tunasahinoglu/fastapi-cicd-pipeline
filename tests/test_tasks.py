@@ -64,6 +64,7 @@ def test_delete_task_not_found(client):
     response = client.delete("/tasks/999")
     assert response.status_code == 404
 
+
 def test_filter_tasks_by_is_done(client):
     done_task = client.post("/tasks", json={"title": "Completed task"}).json()
     client.put(f"/tasks/{done_task['id']}", json={"is_done": True})

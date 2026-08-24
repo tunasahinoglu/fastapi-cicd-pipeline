@@ -41,6 +41,7 @@ def delete_task(db: Session, task_id: int) -> bool:
     db.commit()
     return True
 
+
 def get_tasks(
     db: Session, skip: int = 0, limit: int = 100, is_done: Optional[bool] = None
 ) -> List[models.Task]:
