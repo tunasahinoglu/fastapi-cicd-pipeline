@@ -28,14 +28,19 @@ def health_check():
     return {"status": "ok"}
 
 
+@app.get("/tasks", response_model=List[schemas.TaskResponse], tags=["tasks"])
+def read_tasks(
+    skip: int = 0,
+    limit: int = 100,
+    is_done: Optional[bool] = None,
+    db: Session = Depends(get_db),
+):
+    return crud.get_tasks(db, skip=skip, limit=limit, is_done=is_done)
+
+
 @app.post("/tasks", response_model=schemas.TaskResponse, status_code=201, tags=["tasks"])
 def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
     return crud.create_task(db, task)
-
-
-@app.get("/tasks", response_model=List[schemas.TaskResponse], tags=["tasks"])
-def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return crud.get_tasks(db, skip=skip, limit=limit)
 
 
 @app.get("/tasks/{task_id}", response_model=schemas.TaskResponse, tags=["tasks"])
@@ -59,13 +64,3 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     deleted = crud.delete_task(db, task_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Task not found")
-
-
-@app.get("/tasks", response_model=List[schemas.TaskResponse], tags=["tasks"])
-def read_tasks(
-    skip: int = 0,
-    limit: int = 100,
-    is_done: Optional[bool] = None,
-    db: Session = Depends(get_db),
-):
-    return crud.get_tasks(db, skip=skip, limit=limit, is_done=is_done)

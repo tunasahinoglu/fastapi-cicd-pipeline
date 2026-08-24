@@ -9,8 +9,13 @@ def get_task(db: Session, task_id: int) -> Optional[models.Task]:
     return db.query(models.Task).filter(models.Task.id == task_id).first()
 
 
-def get_tasks(db: Session, skip: int = 0, limit: int = 100) -> List[models.Task]:
-    return db.query(models.Task).offset(skip).limit(limit).all()
+def get_tasks(
+    db: Session, skip: int = 0, limit: int = 100, is_done: Optional[bool] = None
+) -> List[models.Task]:
+    query = db.query(models.Task)
+    if is_done is not None:
+        query = query.filter(models.Task.is_done == is_done)
+    return query.offset(skip).limit(limit).all()
 
 
 def create_task(db: Session, task: schemas.TaskCreate) -> models.Task:
@@ -40,12 +45,3 @@ def delete_task(db: Session, task_id: int) -> bool:
     db.delete(db_task)
     db.commit()
     return True
-
-
-def get_tasks(
-    db: Session, skip: int = 0, limit: int = 100, is_done: Optional[bool] = None
-) -> List[models.Task]:
-    query = db.query(models.Task)
-    if is_done is not None:
-        query = query.filter(models.Task.is_done == is_done)
-    return query.offset(skip).limit(limit).all()
