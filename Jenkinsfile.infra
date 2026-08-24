@@ -105,14 +105,16 @@ pipeline {
         stage('Smoke Test') {
             when { expression { params.ACTION == 'apply' } }
             steps {
-                sh """
-                    kubectl rollout status deployment/fastapi-app --timeout=120s
-                    kubectl port-forward svc/fastapi-app 8000:80 &
-                    PF_PID=\$!
-                    sleep 5
-                    curl -sf http://localhost:8000/health
-                    kill \$PF_PID || true
-                """
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+                    sh """
+                        kubectl rollout status deployment/fastapi-app --timeout=120s
+                        kubectl port-forward svc/fastapi-app 8000:80 &
+                        PF_PID=\$!
+                        sleep 5
+                        curl -sf http://localhost:8000/health
+                        kill \$PF_PID || true
+                    """
+                }
             }
         }
 
