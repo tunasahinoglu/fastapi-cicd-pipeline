@@ -21,7 +21,7 @@ pipeline {
     }
 
     environment {
-        AWS_REGION     = 'eu-central-1'
+        AWS_REGION     = 'us-east-1'
         TF_DIR         = 'terraform/infra'
         CLUSTER_NAME   = 'fastapi-cicd-eks'
         ECR_REPO       = 'fastapi-cicd-pipeline'

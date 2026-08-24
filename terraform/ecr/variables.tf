@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "ECR repository region" 
   type        = string
-  default     = "eu-central-1"
+  default     = "us-east-1"
 }
 
 variable "repository_name" {

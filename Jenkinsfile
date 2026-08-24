@@ -9,7 +9,7 @@ pipeline {
     }
 
     environment {
-        AWS_REGION      = 'eu-central-1'
+        AWS_REGION      = 'us-east-1'
         ECR_REPO        = 'fastapi-cicd-pipeline'
         AWS_ACCOUNT_ID  = credentials('aws-account-id')
         ECR_REGISTRY    = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
