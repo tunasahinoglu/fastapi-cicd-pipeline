@@ -11,7 +11,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Task API",
     description="A simple task/todo API used to demo a CI/CD pipeline",
-    version="1.0.0",
+    version="1.1.0",
 )
 
 
@@ -25,7 +25,7 @@ def get_db():
 
 @app.get("/health", tags=["health"])
 def health_check():
-    return {"status": "ok"}
+    return {"status": "ok", "version": app.version}
 
 
 @app.get("/tasks", response_model=List[schemas.TaskResponse], tags=["tasks"])
