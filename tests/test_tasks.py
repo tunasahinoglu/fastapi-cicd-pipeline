@@ -63,3 +63,24 @@ def test_delete_task(client):
 def test_delete_task_not_found(client):
     response = client.delete("/tasks/999")
     assert response.status_code == 404
+
+def test_filter_tasks_by_is_done(client):
+    done_task = client.post("/tasks", json={"title": "Completed task"}).json()
+    client.put(f"/tasks/{done_task['id']}", json={"is_done": True})
+    client.post("/tasks", json={"title": "Pending task"})
+
+    response = client.get("/tasks?is_done=true")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["title"] == "Completed task"
+
+    response = client.get("/tasks?is_done=false")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["title"] == "Pending task"
+
+    response = client.get("/tasks")
+    assert response.status_code == 200
+    assert len(response.json()) == 2

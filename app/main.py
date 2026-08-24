@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
@@ -59,3 +59,12 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     deleted = crud.delete_task(db, task_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Task not found")
+
+@app.get("/tasks", response_model=List[schemas.TaskResponse], tags=["tasks"])
+def read_tasks(
+    skip: int = 0,
+    limit: int = 100,
+    is_done: Optional[bool] = None,
+    db: Session = Depends(get_db),
+):
+    return crud.get_tasks(db, skip=skip, limit=limit, is_done=is_done)

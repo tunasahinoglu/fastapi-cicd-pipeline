@@ -40,3 +40,11 @@ def delete_task(db: Session, task_id: int) -> bool:
     db.delete(db_task)
     db.commit()
     return True
+
+def get_tasks(
+    db: Session, skip: int = 0, limit: int = 100, is_done: Optional[bool] = None
+) -> List[models.Task]:
+    query = db.query(models.Task)
+    if is_done is not None:
+        query = query.filter(models.Task.is_done == is_done)
+    return query.offset(skip).limit(limit).all()

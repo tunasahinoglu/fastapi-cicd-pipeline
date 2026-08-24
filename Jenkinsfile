@@ -42,7 +42,7 @@ pipeline {
             steps {
                 sh '''
                     . .venv/bin/activate
-                    pytest -v --junitxml=test-results.xml
+                    pytest -v --junitxml=test-results.xml --cov=app --cov-report=xml
                 '''
             }
             post {
@@ -57,10 +57,11 @@ pipeline {
                 withSonarQubeEnv('sonarqube-server') {
                     sh """
                         ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                          -Dsonar.projectKey=fastapi-cicd-pipeline \
-                          -Dsonar.sources=app \
-                          -Dsonar.tests=tests \
-                          -Dsonar.python.version=3.12
+                        -Dsonar.projectKey=fastapi-cicd-pipeline \
+                        -Dsonar.sources=app \
+                        -Dsonar.tests=tests \
+                        -Dsonar.python.version=3.12 \
+                        -Dsonar.python.coverage.reportPaths=coverage.xml
                     """
                 }
             }
