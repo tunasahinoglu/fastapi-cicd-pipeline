@@ -116,3 +116,15 @@ repository URL at the SSH form (`git@github.com:...`) rather than HTTPS.
 
 **Webhooks.** SonarQube → `<jenkins-url>/sonarqube-webhook/`, for quality gate
 results. GitHub → `<jenkins-url>/github-webhook/`, for push-triggered builds.
+
+## Cleanup
+
+Uninstall the Helm release before running `terraform destroy`:
+`helm uninstall fastapi-app`. Its `LoadBalancer` is created by Kubernetes,
+not Terraform, so destroying the cluster first can leave it behind as an
+orphaned.
+
+Then trigger the CD pipeline with `ACTION=destroy` to remove the VPC and EKS
+cluster. ECR is untouched by design, since it's a separate Terraform state.
+The Jenkins/SonarQube server and the IAM user aren't managed by Terraform,
+so those are removed by hand.
