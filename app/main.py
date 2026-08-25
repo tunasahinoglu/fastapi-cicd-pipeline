@@ -28,6 +28,15 @@ def health_check():
     return {"status": "ok", "version": app.version}
 
 
+@app.get("/", tags=["health"])
+def root():
+    return {
+        "message": "FastAPI CI/CD demo",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
 @app.get("/tasks", response_model=List[schemas.TaskResponse], tags=["tasks"])
 def read_tasks(
     skip: int = 0,
